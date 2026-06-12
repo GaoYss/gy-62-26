@@ -64,3 +64,5 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+APPOINTMENT_WEEKLY_LIMIT = 2

@@ -191,9 +191,30 @@ textarea {
   cursor: pointer;
 }
 
+.form-hint {
+  grid-column: span 2;
+  margin: 0 0 6px;
+  padding: 10px 14px;
+  background: #e8f0fe;
+  color: #1e40af;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
 .message {
-  color: #2d6a4f;
+  margin: 14px 0 0;
   font-weight: 700;
+}
+
+.message.success {
+  color: #2d6a4f;
+}
+
+.message.error {
+  color: #b42318;
+  background: #ffe1df;
+  padding: 10px 14px;
+  border-radius: 6px;
 }
 
 .table-wrap {

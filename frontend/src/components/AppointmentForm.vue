@@ -1,5 +1,8 @@
 <template>
   <form class="form-grid" @submit.prevent="$emit('submit')">
+    <p v-if="weeklyLimit" class="form-hint">
+      提示：同一家属对同一老人每周最多预约 {{ weeklyLimit }} 次
+    </p>
     <label>
       探视老人
       <select v-model.number="model.resident_id" required>
@@ -50,7 +53,8 @@
 <script setup>
 defineProps({
   model: { type: Object, required: true },
-  residents: { type: Array, default: () => [] }
+  residents: { type: Array, default: () => [] },
+  weeklyLimit: { type: Number, default: null }
 })
 defineEmits(['submit'])
 </script>

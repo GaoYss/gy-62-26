@@ -4,8 +4,8 @@
 
     <article class="panel">
       <h3>新建预约</h3>
-      <AppointmentForm :model="form" :residents="residents" @submit="saveAppointment" />
-      <p v-if="message" class="message">{{ message }}</p>
+      <AppointmentForm :model="form" :residents="residents" :weekly-limit="weeklyLimit" @submit="saveAppointment" />
+      <p v-if="message" :class="['message', messageType]">{{ message }}</p>
     </article>
 
     <article class="panel">
@@ -49,7 +49,9 @@ import { residentsApi } from '../services/residents'
 
 const residents = ref([])
 const appointments = ref([])
+const weeklyLimit = ref(null)
 const message = ref('')
+const messageType = ref('')
 const statusText = { pending: '待审核', approved: '已通过', rejected: '已拒绝', completed: '已完成', cancelled: '已取消' }
 const initialForm = {
   resident_id: '',
@@ -64,7 +66,7 @@ const initialForm = {
 const form = reactive({ ...initialForm })
 
 onMounted(async () => {
-  await Promise.all([loadResidents(), loadAppointments()])
+  await Promise.all([loadResidents(), loadAppointments(), loadConfig()])
 })
 
 async function loadResidents() {
@@ -75,11 +77,24 @@ async function loadAppointments() {
   appointments.value = (await appointmentsApi.list()).results
 }
 
+async function loadConfig() {
+  const data = await appointmentsApi.getConfig()
+  weeklyLimit.value = data.weekly_limit
+}
+
 async function saveAppointment() {
-  await appointmentsApi.create(form)
-  Object.assign(form, initialForm)
-  message.value = '预约已提交'
-  await loadAppointments()
+  message.value = ''
+  messageType.value = ''
+  try {
+    await appointmentsApi.create(form)
+    Object.assign(form, initialForm)
+    message.value = '预约已提交'
+    messageType.value = 'success'
+    await loadAppointments()
+  } catch (err) {
+    message.value = err.message
+    messageType.value = 'error'
+  }
 }
 
 function formatTime(value) {

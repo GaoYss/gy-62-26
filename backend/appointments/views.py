@@ -7,7 +7,7 @@ from django.views.decorators.http import require_http_methods
 from backend.common.http import error, list_response, ok, parse_json
 
 from .models import Appointment
-from .services import create_appointment, list_appointments, serialize_appointment, update_appointment
+from .services import create_appointment, get_appointment_config, list_appointments, serialize_appointment, update_appointment
 
 
 @csrf_exempt
@@ -44,3 +44,9 @@ def appointment_detail(request, pk):
         return ok(serialize_appointment(appointment))
     except (ObjectDoesNotExist, ValidationError, IntegrityError, TypeError, ValueError) as exc:
         return error(str(exc))
+
+
+@csrf_exempt
+@require_http_methods(["GET", "OPTIONS"])
+def appointment_config(request):
+    return ok(get_appointment_config())
